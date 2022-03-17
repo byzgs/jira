@@ -1,10 +1,25 @@
 import React, { ReactNode, useState } from "react";
 import * as auth from 'auth-provider'
 import { User } from "screens/project-list/search-panel"
+import { http } from "utils/http";
+import { useMount } from "utils";
 
 interface AuthForm {
   username: string;
   password: string
+}
+
+//初始化用户信息(用于保存登陆状态)
+const bootstrapUser = async () => {
+  let user = null
+  const token = auth.getToken()
+  if(token) {
+    // 用http而不用 useHttp的原因：想自己指定token
+    // me API 返回值包括user信息
+    const data = await http('me', {token})
+    user = data.user
+  }
+  return user
 }
 
 const AuthContext = React.createContext<{
@@ -35,6 +50,9 @@ export const AuthProvider = ({children}:{children:ReactNode}) => {
     return auth.logout().then(() => setUser(null))
   }
 
+  useMount(() => {
+    bootstrapUser().then(setUser)
+  })
   return <AuthContext.Provider children={children} value={{ user, login, register, logout }} />
 }
 
