@@ -2,72 +2,66 @@ import React from "react"
 import { useAuth } from "context/auth.context"
 import { ProjectListScreen } from "screens/project-list"
 import styled from "@emotion/styled"
+import { CustomizedRow } from "components/lib"
+import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg'
+import { Button, Dropdown, Menu } from "antd"
 
 export const AuthenticatedApp = () => {
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
   return (
     <Container>
-      <Header>
-        <HeaderLeft>
-          <h3>我是Logo</h3>
+      <Header between={true} >
+        <HeaderLeft gap={true}>
+          <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'} />
           <h3>项目</h3>
-          <h3></h3>
+          <h3>用户</h3>
         </HeaderLeft>
         <HeaderRight>
-          <button onClick={() => { logout() }}>点我退出登录</button>
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item key={'logout'}>
+                  <Button type="link" onClick={logout}>登出</Button>
+                </Menu.Item>
+              </Menu>}>
+            <Button type="link" onClick={e => e.preventDefault()}>你好！{user?.name}</Button>
+          </Dropdown>
         </HeaderRight>
       </Header>
-
-      <Nav>我是nav</Nav>
       <Main>
         <ProjectListScreen />
       </Main>
-      <Aside>我是aside</Aside>
-      <Footer>我是footer</Footer>
     </Container>
   )
 }
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 6rem 1fr 6rem;
-  grid-template-columns: 20rem 1fr 20rem;
+  grid-template-rows: 6rem 1fr;
   height: 100vh;
   grid-template-areas: 
-  "header header header"
-  "nav main aside"
-  "footer footer footer";
+  "header"
+  "main"
 
 `
 
 // grid-area 给grid元素起名字
-const Header = styled.header`
-grid-area: header;
-display: flex;
-align-items: center;
-justify-content: space-between;
+  const Header = styled(CustomizedRow)`
+  grid-area: header;
+  padding: 3.2rem;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  z-index: 1;
 `
 
-const HeaderLeft = styled.div`
-display: flex;
-align-items: center;
+const HeaderLeft = styled(CustomizedRow)`
+  display: flex;
+  align-items: center;
 `
 const HeaderRight = styled.div`
 
 `
 
 const Main = styled.div`
-grid-area: main;
+  grid-area: main;
 
-`
-const Nav = styled.footer`
-grid-area: nav;
-
-`
-const Aside = styled.footer`
-grid-area: aside;
-`
-
-const Footer = styled.footer`
-grid-area: footer;
 `
