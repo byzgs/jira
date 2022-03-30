@@ -12,7 +12,12 @@ const defaultInitialState: State<null> = {
   error: null
 }
 
-export const useAsync = <D>(initialState?: State<D>) => {
+const defaultConfig = {
+  throwOnError : false
+}
+
+export const useAsync = <D>(initialState?: State<D>, initialConfig ?: typeof defaultConfig) => {
+  const config = {...defaultConfig,initialConfig}
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
     ...initialState
@@ -29,7 +34,7 @@ export const useAsync = <D>(initialState?: State<D>) => {
     data: null,
     stat: 'error'
   })
-
+  //run 用来触发异步请求
   const run = (promise: Promise<D>) => {
     if (!promise || !promise.then) {
       throw new Error('请传入 Promise 类型数据')
@@ -41,7 +46,9 @@ export const useAsync = <D>(initialState?: State<D>) => {
         return data
       })
       .catch(error => {
+        //catch会消化异常，如果不主动抛出，外面接收不到异常
         setError(error)
+        if(config.throwOnError) return Promise.reject(error)
         return error
       })
   }
