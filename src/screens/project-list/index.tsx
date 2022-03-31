@@ -1,7 +1,7 @@
 import React from "react"
 import { useEffect, useState } from "react"
 import * as qs from "qs";
-import { cleanObject, useMount, useDebounce } from "utils"
+import { cleanObject, useMount, useDebounce, useDocumentTitle } from "utils"
 import { List, Project } from "./list"
 import { SearchPanel } from "./search-panel"
 import { useHttp } from "utils/http";
@@ -29,7 +29,7 @@ export const ProjectListScreen = () => {
   const client = useHttp()
 
 
-
+  useDocumentTitle("项目列表",false)
   return <Container>
     <h1>项目列表</h1>
     <SearchPanel users={users || []} param={param} setParam={setParam} />
