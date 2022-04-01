@@ -1,6 +1,8 @@
+import './wdyr'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { BrowserRouter as Router } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 
 import { DevTools, loadServer } from 'jira-dev-tool';
@@ -12,10 +14,12 @@ import { AppProviders } from 'context';
 loadServer(() => {
   ReactDOM.render(
     <React.StrictMode>
-      <AppProviders>
-        <DevTools />
-        <App />
-      </AppProviders>
+      <Router>
+        <AppProviders>
+          <DevTools />
+          <App />
+        </AppProviders>
+      </Router>
     </React.StrictMode>,
     document.getElementById('root')
   );
