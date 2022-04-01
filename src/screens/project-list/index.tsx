@@ -11,29 +11,32 @@ import { useAsync } from "utils/use-async";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/users";
 import { useUrlQueryParam } from "utils/url";
+import { useProjectsSearchParams } from "./util";
 
 export const ProjectListScreen = () => {
 
   const apiUrl = process.env.REACT_APP_API_URL
+
+  useDocumentTitle("项目列表",false)
 
   // const [param, setParam] = useState({
   //   name: '',
   //   personId: ''
   // })
 
-  const [param,setParam] = useUrlQueryParam(['name','personId'])
-  // setParam({name: '123'})
-  
-  const debouncedParam = useDebounce(param, 2000)
+  // const [param,setParam] = useUrlQueryParam(['name','personId'])
+  // //从url得到的param都是string类型
+  // const projectParam = {...param,personId: Number(param.personId) || undefined}
+  // --> 抽象出去
+  const [param,setParam] = useProjectsSearchParams()
 
   // const [list, setList] = useState([]) --> 用了useAsync来处理异步操作
 
   // 自定义hook，处理异步操作
-  const { isLoading, error, data: list } = useProjects(debouncedParam)
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 2000))
   const {data:users} = useUsers()
   const client = useHttp()
 
-  useDocumentTitle("项目列表",false)
 
   // console.log(useUrlQueryParam(['name']));
   
