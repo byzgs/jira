@@ -16,14 +16,14 @@ export const ProjectListScreen = () => {
 
   const apiUrl = process.env.REACT_APP_API_URL
 
-  const [, setParam] = useState({
-    name: '',
-    personId: ''
-  })
+  // const [param, setParam] = useState({
+  //   name: '',
+  //   personId: ''
+  // })
 
-  const [keys] = useState<('name'|'personId')[]>(['name','personId'])
-  const [param] = useUrlQueryParam(keys)
-
+  const [param,setParam] = useUrlQueryParam(['name','personId'])
+  // setParam({name: '123'})
+  
   const debouncedParam = useDebounce(param, 2000)
 
   // const [list, setList] = useState([]) --> 用了useAsync来处理异步操作
