@@ -18,6 +18,7 @@ export const cleanObject = (object: { [key :string] : unknown}) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback()
+    // 依赖项里如果加了callback会无限循环
   }, [])
 }
 
@@ -69,3 +70,17 @@ export const useDocumentTitle = (title:string,keepOnUnmount:boolean = true) => {
 
 //重置路由
 export const resetRoute = () => window.location.href = window.location.origin
+
+//返回组件的挂在状态： 如果还没挂载/已经卸载，返回false 否则返回true
+export const useMountedRef = () => {
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  })
+
+  return mountedRef
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMountedRef } from "utils";
 
 interface State<D> {
   error: Error | null;
@@ -36,6 +37,10 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
   })
   //想用useState保存函数时，不能直接写一个函数，会被当做惰性初始state
   const [retry, setRetry] = useState(() => () => { })
+
+  //判断组件挂载状态：避免出现promise没有返回时，组件就被卸载，从而报错
+  const mountedRef = useMountedRef()
+
   //run 用来触发异步请求
   const run = (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
     if (!promise || !promise.then) {
@@ -44,7 +49,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
 
     //因为惰性初始state 所以要加一层
     setRetry(() => () => {
-      if(runConfig?.retry) {
+      if (runConfig?.retry) {
         run(runConfig?.retry(), runConfig)
       }
     })
@@ -52,7 +57,8 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
     setState({ ...state, stat: 'loading' })
     return promise
       .then(data => {
-        setData(data)
+        if (mountedRef.current)
+          setData(data)
         return data
       })
       .catch(error => {
