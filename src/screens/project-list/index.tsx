@@ -6,7 +6,7 @@ import { List, Project } from "./list"
 import { SearchPanel } from "./search-panel"
 import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 import { useAsync } from "utils/use-async";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/users";
@@ -17,7 +17,7 @@ export const ProjectListScreen = () => {
 
   const apiUrl = process.env.REACT_APP_API_URL
 
-  useDocumentTitle("项目列表",false)
+  useDocumentTitle("项目列表", false)
 
   // const [param, setParam] = useState({
   //   name: '',
@@ -28,25 +28,25 @@ export const ProjectListScreen = () => {
   // //从url得到的param都是string类型
   // const projectParam = {...param,personId: Number(param.personId) || undefined}
   // --> 抽象出去
-  const [param,setParam] = useProjectsSearchParams()
+  const [param, setParam] = useProjectsSearchParams()
 
   // const [list, setList] = useState([]) --> 用了useAsync来处理异步操作
 
   // 自定义hook，处理异步操作
-  const { isLoading, error, data: list } = useProjects(useDebounce(param, 2000))
-  const {data:users} = useUsers()
+  const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 2000))
+  const { data: users } = useUsers()
   const client = useHttp()
 
 
   // console.log(useUrlQueryParam(['name']));
-  
+
   return <Container>
     <h1>项目列表</h1>
     <SearchPanel users={users || []} param={param} setParam={setParam} />
     {
       error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null
     }
-    <List dataSource={list || []} loading={isLoading} users={users || []} />
+    <List refresh={retry} dataSource={list || []} loading={isLoading} users={users || []} />
   </Container>
 };
 

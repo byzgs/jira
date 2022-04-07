@@ -13,11 +13,11 @@ const defaultInitialState: State<null> = {
 }
 
 const defaultConfig = {
-  throwOnError : false
+  throwOnError: false
 }
 
-export const useAsync = <D>(initialState?: State<D>, initialConfig ?: typeof defaultConfig) => {
-  const config = {...defaultConfig,initialConfig}
+export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
+  const config = { ...defaultConfig, initialConfig }
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
     ...initialState
@@ -34,11 +34,21 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig ?: typeof def
     data: null,
     stat: 'error'
   })
+  //想用useState保存函数时，不能直接写一个函数，会被当做惰性初始state
+  const [retry, setRetry] = useState(() => () => { })
   //run 用来触发异步请求
-  const run = (promise: Promise<D>) => {
+  const run = (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
     if (!promise || !promise.then) {
       throw new Error('请传入 Promise 类型数据')
     }
+
+    //因为惰性初始state 所以要加一层
+    setRetry(() => () => {
+      if(runConfig?.retry) {
+        run(runConfig?.retry(), runConfig)
+      }
+    })
+
     setState({ ...state, stat: 'loading' })
     return promise
       .then(data => {
@@ -48,7 +58,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig ?: typeof def
       .catch(error => {
         //catch会消化异常，如果不主动抛出，外面接收不到异常
         setError(error)
-        if(config.throwOnError) return Promise.reject(error)
+        if (config.throwOnError) return Promise.reject(error)
         return error
       })
   }
@@ -61,6 +71,8 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig ?: typeof def
     run,
     setData,
     setError,
+    //retry 被调用时，重新跑一遍run，让state刷新一遍
+    retry,
     ...state
   }
 } 
