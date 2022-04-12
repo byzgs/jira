@@ -1,5 +1,6 @@
 import { useAuth } from 'context/auth.context'
 import qs from 'qs'
+import { useCallback } from 'react'
 import * as auth from '../auth-provider'
 const apiUrl = process.env.REACT_APP_API_URL
 
@@ -49,5 +50,7 @@ export const useHttp = () => {
   // return ([endpoint, config]: [string, Config]) => http(endpoint, { ...config, token: user?.token })
   // : [string, Config] 类型与http中类型完全相同，因此可以用 ***Parameters<typeofxxx>***
   //  ...操作符原因: 这样就不用在传参时非要数组touple了
-  return (...[endpoint, config]: Parameters<typeof http>) => http(endpoint, { ...config, token: user?.token })
+  return useCallback(
+    (...[endpoint, config]: Parameters<typeof http>) => http(endpoint, { ...config, token: user?.token })
+    , [user?.token])
 }
