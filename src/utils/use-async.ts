@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import { useMountedRef } from "utils";
 
 interface State<D> {
@@ -17,33 +17,51 @@ const defaultConfig = {
   throwOnError: false
 }
 
+//帮助判断mountedRef.current
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const mountedRef = useMountedRef()
+
+  return useCallback((...args: T[]) => (mountedRef.current ? dispatch(...args) : void 0), [dispatch, mountedRef])
+}
+
 export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
   const config = { ...defaultConfig, initialConfig }
-  const [state, setState] = useState<State<D>>({
+  // const [state, setState] = useState<State<D>>({
+  //   ...defaultInitialState,
+  //   ...initialState
+  // })
+
+  //用 usereducer改造
+
+  const [state, dispatch] = useReducer((state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }), {
     ...defaultInitialState,
     ...initialState
   })
+  
+  //判断组件挂载状态：避免出现promise没有返回时，组件就被卸载，从而报错
+  // const mountedRef = useMountedRef()
+  const safeDispatch = useSafeDispatch(dispatch)
 
   const setData = useCallback(
-    (data: D) => setState({
-      data,
-      stat: 'success',
-      error: null
-    }),[]
+    (data: D) =>
+      safeDispatch({
+        data,
+        stat: 'success',
+        error: null
+      }), [safeDispatch]
   )
 
   const setError = useCallback(
-    (error: Error) => setState({
-      error,
-      data: null,
-      stat: 'error'
-    }),[]
+    (error: Error) =>
+      safeDispatch({
+        error,
+        data: null,
+        stat: 'error'
+      }), [safeDispatch]
   )
   //想用useState保存函数时，不能直接写一个函数，会被当做惰性初始state
   const [retry, setRetry] = useState(() => () => { })
 
-  //判断组件挂载状态：避免出现promise没有返回时，组件就被卸载，从而报错
-  const mountedRef = useMountedRef()
 
   //run 用来触发异步请求
   const run = useCallback((promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
@@ -58,11 +76,12 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
       }
     })
     //用惰性setState 这样不依赖state 就避免了重复渲染问题
-    setState(prevState => ({ ...prevState, stat: 'loading' }))
+    // dispatch(prevState => ({ ...prevState, stat: 'loading' }))
+    safeDispatch({ stat: 'loading' })
     return promise
       .then(data => {
-        if (mountedRef.current)
-          setData(data)
+        // if (mountedRef.current)
+        setData(data)
         return data
       })
       .catch(error => {
@@ -71,7 +90,7 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
         if (config.throwOnError) return Promise.reject(error)
         return error
       })
-  }, [config.throwOnError, mountedRef, setData, setError])
+  }, [config.throwOnError, setData, setError, safeDispatch])
 
   return {
     isIdle: state.stat === 'idle',
