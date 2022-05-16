@@ -1,5 +1,6 @@
-import { Table, TableProps } from "antd";
+import { Dropdown, Menu, Table, TableProps } from "antd";
 import Column from "antd/lib/table/Column";
+import { ButtonNoPadding } from "components/lib";
 import { Pin } from "components/pin";
 import dayjs from "dayjs";
 import React from "react"
@@ -18,7 +19,8 @@ export interface Project {
 // ListProps： 包含两部分类型：1.继承TableProps所有类型的集合 2.users
 interface ListProps extends TableProps<Project> {
   users: User[];
-  refresh?: () => void
+  refresh?: () => void;
+  setProjectModalOpen: (isOpen: boolean) => void
 }
 export const List = ({ users, ...props }: ListProps) => {
 
@@ -68,6 +70,17 @@ export const List = ({ users, ...props }: ListProps) => {
             </span>
           }
         },
+        {
+          render(value, project) {
+            return <Dropdown overlay={<Menu>
+              <Menu.Item key={'edit'}>
+                <ButtonNoPadding type="link" onClick={() => props.setProjectModalOpen(true)}>编辑</ButtonNoPadding>
+              </Menu.Item>
+            </Menu>}>
+              <ButtonNoPadding type="link">...</ButtonNoPadding>
+            </Dropdown>
+          }
+        }
       ]}
       {...props} //index.tsx 透传过来了dataSource、loading
     >
