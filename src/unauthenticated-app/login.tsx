@@ -4,12 +4,15 @@ import { Button, Form, Input, Typography } from "antd";
 import { LongButton } from "unauthenticated-app";
 import { useAsync } from "utils/use-async";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 export const LoginScreen = ({ onError }: { onError: (error: Error) => void }) => {
 
   const { login, user } = useAuth()
 
   const { run, isLoading, error } = useAsync(undefined, { throwOnError: true })
+
+  const dispatch = useDispatch()
 
   const apiUrl = process.env.REACT_APP_API_URL
 
@@ -18,6 +21,7 @@ export const LoginScreen = ({ onError }: { onError: (error: Error) => void }) =>
   // }
   const handleSubmit = async (values: { username: string, password: string }) => {
     // login(values)
+    
     try {
       await run(login(values))
     } catch (e) {
