@@ -10,35 +10,30 @@ import { Button, Dropdown, Menu } from "antd"
 import { resetRoute } from "utils"
 import { ProjectModal } from "screens/project-list/project-modal"
 import { ProjectPopover } from "components/projext-popover"
+import { useProjectModal } from "screens/project-list/util"
 
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false)
+  //用url的方式来控制模态框开关，因此此处不用逐级传递状态
+  // const [projectModalOpen, setProjectModalOpen] = useState(false)
 
   return (
     <Container>
-      <PageHeader
-        projectButton={
-          <ButtonNoPadding type={'link'} onClick={() => { setProjectModalOpen(true) }} >创建项目</ButtonNoPadding>
-        } />
+      <PageHeader/>
       <Main>
         {/* <ProjectListScreen /> */}
         <Routes>
           {/* <Route path="/" element={<ProjectListScreen />}></Route> */}
-          <Route path="/projects" element={<ProjectListScreen
-            projectButton={
-              <ButtonNoPadding type={'link'}
-                onClick={() => { setProjectModalOpen(true) }} >创建项目</ButtonNoPadding>
-            } />}></Route>
+          <Route path="/projects" element={<ProjectListScreen/>}></Route>
           <Route path="/projects/:projectId/*" element={<ProjectScreen />}></Route>
           <Route path="*" element={<Navigate to="/projects" replace={true} />} />
         </Routes>
       </Main>
-      <ProjectModal projectModalOpen={projectModalOpen} onClose={() => { setProjectModalOpen(false) }} />
+      <ProjectModal />
     </Container>
   )
 }
 
-const PageHeader = (props: { projectButton: JSX.Element }) => {
+const PageHeader = () => {
   return (
     <Header between={true} >
       <HeaderLeft gap={true}>
@@ -46,7 +41,7 @@ const PageHeader = (props: { projectButton: JSX.Element }) => {
           <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'} />
         </ButtonNoPadding>
         {/* <Link to={'/projects'}>项目</Link> */}
-        <ProjectPopover {...props} />
+        <ProjectPopover />
         <Link to={'/users'}>用户</Link>
       </HeaderLeft>
       <HeaderRight>

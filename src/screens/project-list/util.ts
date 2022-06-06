@@ -9,3 +9,18 @@ export const useProjectsSearchParams = () => {
     setParam
   ] as const
 }
+
+//url来管理项目模态框状态
+export const useProjectModal = () => {
+  const [{projectCreate}, setProjectCreate] = useUrlQueryParam([
+    'projectCreate'
+  ])
+
+  const open = () => setProjectCreate({projectCreate: true})
+  const close = () => setProjectCreate({projectCreate: false})
+  return {
+    projectModalOpen: projectCreate === 'true',
+    open,
+    close
+  }
+}
