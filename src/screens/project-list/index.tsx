@@ -12,7 +12,7 @@ import { useProjects } from "utils/project";
 import { useUsers } from "utils/users";
 import { useUrlQueryParam } from "utils/url";
 import { useProjectModal, useProjectsSearchParams } from "./util";
-import { ButtonNoPadding, CustomizedRow } from "components/lib";
+import { ButtonNoPadding, CustomizedRow, ErrorBox } from "components/lib";
 
 export const ProjectListScreen = () => {
 
@@ -36,7 +36,7 @@ export const ProjectListScreen = () => {
   // const [list, setList] = useState([]) --> 用了useAsync来处理异步操作
 
   // 自定义hook，处理异步操作
-  const { isLoading, error, data: list, retry } = useProjects(useDebounce(param, 2000))
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 2000))
   const { data: users } = useUsers()
   const client = useHttp()
 
@@ -55,10 +55,8 @@ export const ProjectListScreen = () => {
     </CustomizedRow>
 
     <SearchPanel users={users || []} param={param} setParam={setParam} />
-    {
-      error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null
-    }
-    <List refresh={retry} dataSource={list || []} loading={isLoading} users={users || []} />
+    <ErrorBox error={error} />
+    <List dataSource={list || []} loading={isLoading} users={users || []} />
   </Container>
 };
 

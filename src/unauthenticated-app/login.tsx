@@ -4,6 +4,7 @@ import { Button, Form, Input, Typography } from "antd";
 import { LongButton } from "unauthenticated-app";
 import { useAsync } from "utils/use-async";
 import { Link } from "react-router-dom";
+import { ErrorBox } from "components/lib";
 
 export const LoginScreen = ({ onError }: { onError: (error: Error) => void }) => {
 
@@ -29,7 +30,7 @@ export const LoginScreen = ({ onError }: { onError: (error: Error) => void }) =>
   return (
     <Form
       onFinish={handleSubmit}>
-      {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
+      <ErrorBox error={error} />
       <Form.Item name={'username'} rules={[{ required: true, message: '请输入用户名' }]}>
         <Input type="text" id={'username'} placeholder={'用户名'} />
       </Form.Item>

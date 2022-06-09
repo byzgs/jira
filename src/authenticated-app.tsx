@@ -9,7 +9,7 @@ import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg'
 import { Button, Dropdown, Menu } from "antd"
 import { resetRoute } from "utils"
 import { ProjectModal } from "screens/project-list/project-modal"
-import { ProjectPopover } from "components/projext-popover"
+import { ProjectPopover } from "components/project-popover"
 import { useProjectModal } from "screens/project-list/util"
 
 export const AuthenticatedApp = () => {
