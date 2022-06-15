@@ -4,7 +4,8 @@ import { cleanObject } from "utils"
 
 // 返回页面url中，指定键的参数值
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
+  const setSearchParams = useSetUrlSearchParam()
 
   return [
 
@@ -25,10 +26,18 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       // iterator --> 迭代器
       // var a = [1,2,3] --> var i = a[Symbol.iterator]() --> i.next()
       //Object.fromEntries --> 把键值对列表，转化为一个对象 Object.fromEntries(iterable)
-      const o = cleanObject({ ...Object.fromEntries(searchParams), ...params }) as URLSearchParamsInit
-      return setSearchParams(o)
+      return setSearchParams(params)
     }
   ] as const
   // 不加as const 会有类型问题 --> 返回最原始类型 
   // 例子： const a = ['jack',12,{gender:'male'}]
+}
+
+export const useSetUrlSearchParam = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  return (params: { [key in string]: unknown }) => {
+    const o = cleanObject({ ...Object.fromEntries(searchParams), ...params }) as URLSearchParamsInit
+    return setSearchParams(o)
+  }
 }
