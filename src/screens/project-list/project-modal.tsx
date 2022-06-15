@@ -19,13 +19,18 @@ export const ProjectModal = () => {
     })
   }
 
+  const closeModal = () => {
+    form.resetFields()
+    close()
+  }
+
   const title = editingProject ? "编辑项目" : "创建项目"
 
   useEffect(() => {
     form.setFieldsValue(editingProject)
   }, [editingProject, form])
 
-  return <Drawer forceRender={true} onClose={close} visible={projectModalOpen} width={'100%'}>
+  return <Drawer forceRender={true} onClose={closeModal} visible={projectModalOpen} width={'100%'}>
     {
       isLoading ? <Spin size="large" /> : <>
         <h1>{title}</h1>
