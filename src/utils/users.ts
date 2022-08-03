@@ -1,6 +1,6 @@
 // 抽象出来对users的异步操作
 
-import { User } from "screens/project-list/search-panel";
+import { User } from "types/user";
 import { useEffect } from "react"
 import { cleanObject, useMount } from "utils"
 import { useHttp } from "./http"

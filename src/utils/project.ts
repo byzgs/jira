@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from "react"
 import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query"
-import { Project } from "screens/project-list/list"
+import { Project } from "types/project"
 import { useProjectsSearchParams } from "screens/project-list/util"
 import { cleanObject } from "utils"
 import { useHttp } from "./http"

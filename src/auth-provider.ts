@@ -1,6 +1,6 @@
 //如果真实项目使用了firebase这种第三方auth服务的话，本文件不需要开发
 
-import { User } from "screens/project-list/search-panel"
+import { User } from "types/user"
 const localStorageKey = '__auth_provider_token__'
 
 export const getToken = () => window.localStorage.getItem(localStorageKey)

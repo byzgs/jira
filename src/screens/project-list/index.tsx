@@ -2,7 +2,8 @@ import React from "react"
 import { useEffect, useState } from "react"
 import * as qs from "qs";
 import { cleanObject, useMount, useDebounce, useDocumentTitle } from "utils"
-import { List, Project } from "./list"
+import { List } from "./list"
+import { Project } from "../../types/project";
 import { SearchPanel } from "./search-panel"
 import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
