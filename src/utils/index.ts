@@ -23,17 +23,17 @@ export const useMount = (callback: () => void) => {
 }
 
 export const useDebounce = <V>(value: V, delay?: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value)
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    //每次value变化以后，设置一个定时器
-    const timeout = setTimeout(() => setDebouncedValue(value), delay)
-    //每次在上一个useEffect处理完后再运行
-    return () => clearTimeout(timeout)
-  }, [value, delay])
+    // 每次在value变化以后，设置一个定时器
+    const timeout = setTimeout(() => setDebouncedValue(value), delay);
+    // 每次在上一个useEffect处理完以后再运行
+    return () => clearTimeout(timeout);
+  }, [value, delay]);
 
-  return debouncedValue
-}
+  return debouncedValue;
+};
 
 export const useArray = <T>(initialArray: T[]) => {
   const [value,setValue] = useState(initialArray)

@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { Button, Spin, Typography } from "antd";
 import { DevTools } from "jira-dev-tool";
 
+//自定义的Row组件
 export const CustomizedRow = styled.div<{
   gap?: number | boolean,
   between?: boolean,
@@ -17,6 +18,8 @@ margin-bottom: ${props => typeof props.marginBottom === 'number' ? props.marginB
   margin-right: ${props => typeof props.gap === 'number' ? props.gap + 'rem' : (props.gap ? '2rem' : undefined)};
 }
 `
+
+// 自定义的整个页面组件
 const FullPage = styled.div`
 height: 100vh;
 display: flex;
@@ -32,6 +35,7 @@ export const FullPageError = ({ error }: { error: Error | null }) => <FullPage>
   <ErrorBox error={error} />
 </FullPage>
 
+// 自定义无内边距Button
 export const ButtonNoPadding = styled(Button)`
   padding: 0;
 `
@@ -46,3 +50,11 @@ export const ErrorBox = ({ error }: { error: unknown }) => {
   }
   return null
 }
+
+// 自定义页面3.2rem内边距的Container
+export const ScreenContainer = styled.div`
+  padding: 3.2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`

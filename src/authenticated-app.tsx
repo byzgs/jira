@@ -92,7 +92,7 @@ const HeaderRight = styled.div`
 
 `
 
-const Main = styled.div`
-  grid-area: main;
-
+const Main = styled.main`
+  display: flex;
+  overflow: hidden;
 `
