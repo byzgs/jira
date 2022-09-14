@@ -11,6 +11,7 @@ import { resetRoute } from "utils"
 import { ProjectModal } from "screens/project-list/project-modal"
 import { ProjectPopover } from "components/project-popover"
 import { useProjectModal } from "screens/project-list/util"
+import { UserPopover } from "components/user-popover"
 
 export const AuthenticatedApp = () => {
   //用url的方式来控制模态框开关，因此此处不用逐级传递状态
@@ -40,9 +41,8 @@ const PageHeader = () => {
         <ButtonNoPadding type="link" onClick={resetRoute}>
           <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'} />
         </ButtonNoPadding>
-        {/* <Link to={'/projects'}>项目</Link> */}
         <ProjectPopover />
-        <Link to={'/users'}>用户</Link>
+        <UserPopover />
       </HeaderLeft>
       <HeaderRight>
         <User />
