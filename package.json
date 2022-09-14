@@ -33,6 +33,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build -r git@github.com:byzgs/byzgs.github.io.git -b main",
     "prepare": "husky install"
   },
   "eslintConfig": {
@@ -55,6 +57,7 @@
   },
   "devDependencies": {
     "@types/react-beautiful-dnd": "13.0.0",
+    "gh-pages": "^4.0.0",
     "husky": "^7.0.4"
   },
   "lint-staged": {
