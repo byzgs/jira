@@ -40,12 +40,7 @@ export const List = ({ users, ...props }: ListProps) => {
         },
         {
           title: '部门',
-          dataIndex: 'orginization',
-          render(value, project) {
-            return <span>
-              {users.find(user => user.id === project.personId)?.organization || '无'}
-            </span>
-          }
+          dataIndex: 'organization',
         },
         {
           title: '负责人',
